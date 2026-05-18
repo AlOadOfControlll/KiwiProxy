@@ -3,177 +3,355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiwi Proxy 🥝</title>
+    <title>Kiwi Proxy</title>
     <style>
-        @import url('https://googleapis.com');
+        :root {
+            --neon-green: #39ff14;
+            --dark-bg: #050b05;
+            --card-bg: rgba(10, 25, 10, 0.85);
+        }
 
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #050a05;
-            color: #39ff14;
-            font-family: 'Orbitron', sans-serif;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Animated URL Emojis Background */
-        .bg-emojis {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: none;
+        body, html {
+            background-color: var(--dark-bg);
+            color: #fff;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            opacity: 0.15;
-            font-size: 2.5rem;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
 
-        .bg-emojis span {
-            animation: float 10s infinite ease-in-out;
-            padding: 10px;
+        /* Neon Emoji Background */
+        .bg-marquee {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.12;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            font-size: 2rem;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+        .marquee-row {
+            display: flex;
+            white-space: nowrap;
+            animation: scroll linear infinite;
+            text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
         }
 
-        /* Header */
+        .marquee-row:nth-child(even) { animation-direction: reverse; }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 2;
+            background: var(--card-bg);
+            border: 2px solid var(--neon-green);
+            border-radius: 20px;
+            padding: 35px;
+            width: 90%;
+            max-width: 650px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(57, 255, 20, 0.2);
+            backdrop-filter: blur(10px);
+            transition: opacity 0.3s ease;
+        }
+
         h1 {
-            font-size: 4rem;
-            margin: 0;
-            text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14, 0 0 40px #39ff14;
+            font-size: 3rem;
+            color: var(--neon-green);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
         }
 
-        .subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            text-shadow: 0 0 5px #39ff14;
+        .stats {
+            font-size: 0.85rem;
+            color: #a0fca0;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
+
+        .pulse {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--neon-green);
+            border-radius: 50%;
+            margin-right: 5px;
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        /* Search / URL Bar */
+        .search-box {
+            display: flex;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(57, 255, 20, 0.4);
+            border-radius: 30px;
+            padding: 5px 5px 5px 20px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+        }
+
+        .search-box input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .search-box button {
+            background: var(--neon-green);
+            border: none;
+            color: black;
+            font-weight: bold;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .search-box button:hover { opacity: 0.9; }
 
         /* App Grid */
-        .app-grid {
+        .grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 2rem;
-            width: 350px;
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
         .app-btn {
-            background: rgba(5, 10, 5, 0.8);
-            border: 2px solid #39ff14;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(57, 255, 20, 0.3);
             border-radius: 12px;
-            padding: 20px;
-            color: #39ff14;
-            font-size: 1.2rem;
-            font-family: inherit;
-            text-decoration: none;
-            text-align: center;
+            padding: 18px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
 
         .app-btn:hover {
-            background: #39ff14;
-            color: #050a05;
-            box-shadow: 0 0 20px #39ff14, inset 0 0 10px #050a05;
-            transform: scale(1.05);
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+            transform: translateY(-2px);
+            color: var(--neon-green);
         }
 
-        /* Escape Button */
+        /* Panic Escape Button */
         .escape-btn {
-            background: #ff3333;
-            color: white;
+            width: 100%;
+            background: #ff1414;
             border: none;
-            padding: 12px 30px;
-            font-size: 1.5rem;
-            font-family: inherit;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 0 15px #ff3333;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
+            border-radius: 12px;
+            padding: 14px;
+            color: white;
+            font-size: 1rem;
             font-weight: bold;
-            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 20, 20, 0.3);
         }
 
         .escape-btn:hover {
-            background: #ff6666;
-            box-shadow: 0 0 25px #ff6666;
-            transform: scale(1.1);
+            background: #ff4545;
+            box-shadow: 0 0 15px #ff1414;
         }
 
-        /* Active People Counter */
-        .counter {
-            font-size: 1rem;
-            border: 1px dashed #39ff14;
-            padding: 5px 15px;
-            border-radius: 5px;
-            background: rgba(57, 255, 20, 0.1);
+        /* Fullscreen Proxy Sandbox Iframe */
+        #proxy-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            z-index: 5;
+            background: white;
+            display: none;
         }
 
-        .counter span {
-            color: #fff;
-            text-shadow: 0 0 5px #39ff14;
+        /* Loading Overlay Screen */
+        #loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            z-index: 10;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
         }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(57, 255, 20, 0.2);
+            border-top: 5px solid var(--neon-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        #loading-text {
+            color: var(--neon-green);
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-shadow: 0 0 8px var(--neon-green);
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <!-- Animated Emojis Background -->
-    <div class="bg-emojis">
-        <span>🌐</span><span>🔗</span><span>🥝</span><span>🚀</span><span>🎮</span>
-        <span>⚡</span><span>💻</span><span>🛸</span><span>🍀</span><span>👁️</span>
+    <!-- Background Marquee -->
+    <div class="bg-marquee">
+        <div class="marquee-row">🔗 🌐 💻 🥝 ⚡ 🔒 🔗 🌐 💻 🥝 ⚡ 🔒 🔗 🌐 💻 🥝 ⚡ 🔒 🔗 🌐 💻 🥝 ⚡ 🔒</div>
+        <div class="marquee-row">⚡ 🔒 🔗 🌐 💻 🥝 ⚡ 🔒 🔗 🌐 💻 🥝 ⚡ 🔒 🔗 🌐 💻 🥝 ⚡ 🔒 🔗 🌐 💻 🥝</div>
+        <div class="marquee-row">💻 🥝 ⚡ 🔒 🔗 🌐 💻 🥝 ⚡ 🔒 🔗 🌐 💻 🥝 ⚡ 🔒 🔗 🌐 💻 🥝 ⚡ 🔒 🔗 🌐</div>
     </div>
 
-    <!-- Front Display -->
-    <h1>Kiwi Proxy 🥝</h1>
-    <div class="subtitle">Neon Web Portal</div>
+    <!-- Frontend Menu Container -->
+    <div class="container" id="menu-container">
+        <h1>Kiwi Proxy</h1>
+        <div class="stats"><span class="pulse"></span> <span id="active-count">...</span> users active</div>
 
-    <div class="app-grid">
-        <a class="app-btn" href="https://discord.com" target="_blank">Discord</a>
-        <a class="app-btn" href="https://roblox.com" target="_blank">Roblox</a>
-        <a class="app-btn" href="https://tiktok.com" target="_blank">TikTok</a>
-        <a class="app-btn" href="https://reddit.com" target="_blank">Reddit</a>
+        <!-- Dynamic Search / URL Bar -->
+        <div class="search-box">
+            <input type="text" id="url-input" placeholder="Enter URL or search Google..." onkeydown="if(event.key === 'Enter') launchCustomProxy()">
+            <button onclick="launchCustomProxy()">Go</button>
+        </div>
+
+        <!-- Native Web Apps Buttons -->
+        <div class="grid">
+            <button class="app-btn" onclick="launchApp('https://discord.com')">Discord</button>
+            <button class="app-btn" onclick="launchApp('https://roblox.com')">Roblox</button>
+            <button class="app-btn" onclick="launchApp('https://tiktok.com')">TikTok</button>
+            <button class="app-btn" onclick="launchApp('https://reddit.com')">Reddit</button>
+        </div>
+
+        <!-- Escape Panic Indicator -->
+        <button class="escape-btn" onclick="panicEscape()">Panic Escape [Press ESC Key]</button>
     </div>
 
-    <!-- Escape Button -->
-    <button class="escape-btn" onclick="window.location.replace('https://google.com')">ESCAPE</button>
-
-    <!-- Active People -->
-    <div class="counter">
-        Active Users: <span id="userCount">0</span>
+    <!-- Loading Screen Display -->
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <div id="loading-text">Bypassing restrictions...</div>
     </div>
+
+    <!-- Website Display Canvas Frame -->
+    <iframe id="proxy-view" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"></iframe>
 
     <script>
-        // Fake User Counter Simulation
-        function updateCounter() {
-            // Start at a random base, simulate fluctuation
-            let currentCount = parseInt(localStorage.getItem('kiwiUsers')) || 240;
-            const change = Math.floor(Math.random() * 5) - 2; // -2 to +2
-            currentCount += change;
-            
-            if (currentCount < 200) currentCount = 205; // Set lower bound
-            
-            localStorage.setItem('kiwiUsers', currentCount);
-            document.getElementById('userCount').innerText = currentCount;
+        // List of random loading phrases requested
+        const loadingPhrases = [
+            "Hurry up and load site...",
+            "9x9 is 99x",
+            "If a bee produces honey what does honey produce?",
+            "Securing proxy tunnel connections...",
+            "Decrypting structural web assets..."
+        ];
+
+        // Active user tracker emulator
+        function updateActiveUsers() {
+            document.getElementById('active-count').innerText = Math.floor(Math.random() * 15) + 135;
+        }
+        setInterval(updateActiveUsers, 3000);
+        updateActiveUsers();
+
+        // PANIC ESCAPE MECHANIC: Forces page instantly to Google
+        function panicEscape() {
+            window.location.replace('https://google.com');
         }
 
-        // Update every 2.5 seconds
-        setInterval(updateCounter, 2500);
-        updateCounter(); // Initial call
+        // Listens to global physical browser hardware "Esc" keystroke
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                panicEscape();
+            }
+        });
+
+        // Functional deployment script via mirror server gateways
+        function loadProxyGateway(targetUrl) {
+            const menu = document.getElementById('menu-container');
+            const loader = document.getElementById('loading-screen');
+            const iframe = document.getElementById('proxy-view');
+            const textEl = document.getElementById('loading-text');
+
+            menu.style.display = 'none';
+            loader.style.display = 'flex';
+            
+            // Pick and alternate loaded screen strings randomly
+            textEl.innerText = loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)];
+
+            // Resolves cross-origin blocking using public secure proxy gateways
+            const proxyGatewayUrl = "https://allorigins.win" + encodeURIComponent(targetUrl);
+            iframe.src = proxyGatewayUrl;
+
+            iframe.onload = function() {
+                loader.style.display = 'none';
+                iframe.style.display = 'block';
+            };
+        }
+
+        // Processes grid apps selection execution
+        function launchApp(url) {
+            loadProxyGateway(url);
+        }
+
+        // Processes custom search query input string calculations 
+        function launchCustomProxy() {
+            let input = document.getElementById('url-input').value.trim();
+            if (!input) return;
+
+            // Decides whether search query is absolute domain extension string or search pattern query
+            if (!input.includes('.') || input.includes(' ')) {
+                input = 'https://google.com/search?q=' + encodeURIComponent(input);
+            } else if (!/^https?:\/\//i.test(input)) {
+                input = 'https://' + input;
+            }
+            loadProxyGateway(input);
+        }
     </script>
 </body>
 </html>
