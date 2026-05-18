@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiwi Proxy 🥝</title>
+    <style>
+        @import url('https://googleapis.com');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050a05;
+            color: #39ff14;
+            font-family: 'Orbitron', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Animated URL Emojis Background */
+        .bg-emojis {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            opacity: 0.15;
+            font-size: 2.5rem;
+        }
+
+        .bg-emojis span {
+            animation: float 10s infinite ease-in-out;
+            padding: 10px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Header */
+        h1 {
+            font-size: 4rem;
+            margin: 0;
+            text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14, 0 0 40px #39ff14;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 5px #39ff14;
+        }
+
+        /* App Grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 2rem;
+            width: 350px;
+        }
+
+        .app-btn {
+            background: rgba(5, 10, 5, 0.8);
+            border: 2px solid #39ff14;
+            border-radius: 12px;
+            padding: 20px;
+            color: #39ff14;
+            font-size: 1.2rem;
+            font-family: inherit;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .app-btn:hover {
+            background: #39ff14;
+            color: #050a05;
+            box-shadow: 0 0 20px #39ff14, inset 0 0 10px #050a05;
+            transform: scale(1.05);
+        }
+
+        /* Escape Button */
+        .escape-btn {
+            background: #ff3333;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.5rem;
+            font-family: inherit;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #ff3333;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+
+        .escape-btn:hover {
+            background: #ff6666;
+            box-shadow: 0 0 25px #ff6666;
+            transform: scale(1.1);
+        }
+
+        /* Active People Counter */
+        .counter {
+            font-size: 1rem;
+            border: 1px dashed #39ff14;
+            padding: 5px 15px;
+            border-radius: 5px;
+            background: rgba(57, 255, 20, 0.1);
+        }
+
+        .counter span {
+            color: #fff;
+            text-shadow: 0 0 5px #39ff14;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Emojis Background -->
+    <div class="bg-emojis">
+        <span>🌐</span><span>🔗</span><span>🥝</span><span>🚀</span><span>🎮</span>
+        <span>⚡</span><span>💻</span><span>🛸</span><span>🍀</span><span>👁️</span>
+    </div>
+
+    <!-- Front Display -->
+    <h1>Kiwi Proxy 🥝</h1>
+    <div class="subtitle">Neon Web Portal</div>
+
+    <div class="app-grid">
+        <a class="app-btn" href="https://discord.com" target="_blank">Discord</a>
+        <a class="app-btn" href="https://roblox.com" target="_blank">Roblox</a>
+        <a class="app-btn" href="https://tiktok.com" target="_blank">TikTok</a>
+        <a class="app-btn" href="https://reddit.com" target="_blank">Reddit</a>
+    </div>
+
+    <!-- Escape Button -->
+    <button class="escape-btn" onclick="window.location.replace('https://google.com')">ESCAPE</button>
+
+    <!-- Active People -->
+    <div class="counter">
+        Active Users: <span id="userCount">0</span>
+    </div>
+
+    <script>
+        // Fake User Counter Simulation
+        function updateCounter() {
+            // Start at a random base, simulate fluctuation
+            let currentCount = parseInt(localStorage.getItem('kiwiUsers')) || 240;
+            const change = Math.floor(Math.random() * 5) - 2; // -2 to +2
+            currentCount += change;
+            
+            if (currentCount < 200) currentCount = 205; // Set lower bound
+            
+            localStorage.setItem('kiwiUsers', currentCount);
+            document.getElementById('userCount').innerText = currentCount;
+        }
+
+        // Update every 2.5 seconds
+        setInterval(updateCounter, 2500);
+        updateCounter(); // Initial call
+    </script>
+</body>
+</html>
